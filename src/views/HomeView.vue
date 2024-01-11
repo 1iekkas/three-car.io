@@ -34,7 +34,7 @@ let showColorControl: Ref<boolean> = ref(false)
 const modelLoadingProgress: Ref<number> = ref(0)
 let showLoading: Ref<boolean> = ref(true)
 // 常量
-let camera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, gpsMap: THREE.Texture, model: THREE.Group<THREE.Object3DEventMap>;
+let camera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, gpsMap: THREE.Texture, model: THREE.Group<THREE.Object3DEventMap>, roadMesh: any
 // 环境贴图  
 let hdrTexture: THREE.DataTexture;
 
@@ -174,12 +174,12 @@ const _init = () => {
     async (progress) => {
       // 模型加载进度
       const { loaded, total, lengthComputable } = progress
-      if(lengthComputable) {
-        if(modelLoadingProgress.value == 100) return
+      if (lengthComputable) {
+        if (modelLoadingProgress.value == 100) return
         modelLoadingProgress.value = Math.floor((loaded / total) * 100)
-        console.log(modelLoadingProgress.value, total, loaded, progress)
+        // console.log(modelLoadingProgress.value, total, loaded, progress)
       }
-      
+
       // console.warn('model loading', modelLoadingProgress.value)
     }
   );
@@ -197,11 +197,11 @@ const _init = () => {
   /**操作仪 旋转 转动 */
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.addEventListener("change", render);
-  controls.enableDamping = true
+  /* controls.enableDamping = true
   controls.dampingFactor = 0.3 //阻尼系数
   controls.minDistance = 5
   controls.maxDistance = 7
-  controls.maxPolarAngle = Math.PI / 2.5
+  controls.maxPolarAngle = Math.PI / 2.5 */
   controls.update();
 
   createFloor();
@@ -230,6 +230,7 @@ const createFloor = () => {
 
 /**创建道路 */
 const createRoad = () => {
+  if(showColorControl.value) showColorControl.value = false
   const roadGeometry = new THREE.PlaneGeometry(10, 5); // x, 7
   const material = new THREE.MeshPhysicalMaterial({
     color: 0xffffff,
@@ -237,7 +238,7 @@ const createRoad = () => {
     metalness: 0,
     roughness: 1
   });
-  const roadMesh = new THREE.Mesh(roadGeometry, material);
+  roadMesh = new THREE.Mesh(roadGeometry, material);
   roadMesh.material.map = gpsMap
   roadMesh.material.needsUpdate = true;
   // roadMesh.material.envMap = gpsMap
@@ -250,7 +251,7 @@ const createRoad = () => {
 
   let duration = 3000
   let tween = new TWEEN.Tween(gpsMap.offset)
-    .to({ x: 3 }, duration)
+    .to({ x: gpsMap.offset.x + 3 }, duration)
     .easing(TWEEN.Easing.Linear.None).start().onComplete(() => {
       removeAllAnimate()
     });
@@ -272,9 +273,17 @@ const onWindowResize = () => {
 const wheelRotate = (duration: number) => {
   Object.keys(wheelMap).map(e => {
     let tween = new TWEEN.Tween(wheelMap[e].rotation)
-      .to({ x: Math.PI * 5 }, duration)
+      .to({ x: wheelMap[e].rotation.x + Math.PI * 5 }, duration)
       .easing(TWEEN.Easing.Linear.None).start().onComplete(() => {
         removeAllAnimate()
+        if (roadMesh) {
+          scene.remove(roadMesh)
+          console.log(roadMesh)
+          roadMesh.geometry.dispose();
+          roadMesh.material.dispose();
+          roadMesh = undefined;
+          TWEEN.removeAll()
+        }
       });
   })
   // animate(duration)
@@ -323,6 +332,7 @@ const render = () => {
 const animate = (duration: number) => {
   render()
   activeRequestAnimationFrame = requestAnimationFrame(animate)
+  console.log('rrrr')
 }
 
 /**更换车漆 */
