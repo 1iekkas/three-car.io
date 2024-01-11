@@ -175,6 +175,7 @@ const _init = () => {
       // 模型加载进度
       const { loaded, total, lengthComputable } = progress
       if(lengthComputable) {
+        if(modelLoadingProgress.value == 100) return
         modelLoadingProgress.value = Math.floor((loaded / total) * 100)
         console.log(modelLoadingProgress.value, total, loaded, progress)
       }
