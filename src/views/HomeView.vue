@@ -175,7 +175,7 @@ const _init = () => {
       // 模型加载进度
       const { total, loaded } = progress
       modelLoadingProgress.value = Math.floor((loaded / total) * 100)
-      console.log(modelLoadingProgress.value, total, loaded)
+      console.log(modelLoadingProgress.value, total, loaded, progress)
       // console.warn('model loading', modelLoadingProgress.value)
     }
   );
