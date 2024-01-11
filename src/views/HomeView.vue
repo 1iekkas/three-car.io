@@ -197,11 +197,11 @@ const _init = () => {
   /**操作仪 旋转 转动 */
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.addEventListener("change", render);
-  /* controls.enableDamping = true
+  controls.enableDamping = true
   controls.dampingFactor = 0.3 //阻尼系数
   controls.minDistance = 5
   controls.maxDistance = 7
-  controls.maxPolarAngle = Math.PI / 2.5 */
+  controls.maxPolarAngle = Math.PI / 2.5
   controls.update();
 
   createFloor();
