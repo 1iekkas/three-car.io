@@ -63,7 +63,7 @@ const _init = () => {
   target.appendChild(container);
   /**场景配置 */
   scene = new THREE.Scene();
-  rgbeLoader.load("public/model/taycan/textures/env.hdr", (hdr) => {
+  rgbeLoader.load("/model/taycan/textures/env.hdr", (hdr) => {
     hdr.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = hdr;
     hdrTexture = hdr;
@@ -74,7 +74,7 @@ const _init = () => {
   // scene.add(AxisHelper);
 
   gpsMap = new THREE.TextureLoader().load(
-    "public/model/taycan/textures/road.jpg"
+    "/model/taycan/textures/road.jpg"
   );
 
   gpsMap.wrapS = THREE.RepeatWrapping
@@ -125,8 +125,8 @@ const _init = () => {
 
   /**模型加载/配置 */
   const dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("public/roadSter/draco/gltf/");
-  const loader = new GLTFLoader().setPath("public/model/taycan/"); // 加载器
+  dracoLoader.setDecoderPath("/roadSter/draco/gltf/");
+  const loader = new GLTFLoader().setPath("/model/taycan/"); // 加载器
   loader.setDRACOLoader(dracoLoader);
 
   loader.load(
