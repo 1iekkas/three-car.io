@@ -177,10 +177,8 @@ const _init = () => {
       if (lengthComputable) {
         if (modelLoadingProgress.value == 100) return
         modelLoadingProgress.value = Math.floor((loaded / total) * 100)
-        // console.log(modelLoadingProgress.value, total, loaded, progress)
+        console.log(modelLoadingProgress.value, total, loaded, progress)
       }
-
-      // console.warn('model loading', modelLoadingProgress.value)
     }
   );
 
